@@ -525,11 +525,11 @@ footer{border-top:1px solid var(--line);padding-block:44px 52px}
         </form>
 
         <div class="sent" id="sent" hidden tabindex="-1">
-          <h3 id="sentTitle">Your request is ready.</h3>
-          <p class="note" id="sentNote">This preview isn't connected to an inbox yet, so nothing was sent. On the live site this goes straight to Dark Matter Fabrication.</p>
+          <h3 id="sentTitle">Send your request</h3>
+          <p class="note" id="sentNote">Press Send by email to open your email app with this request filled in.</p>
           <pre id="summary"></pre>
           <div class="cta">
-            <a class="btn" id="mailBtn" href="#order" hidden>Send by email</a>
+            <a class="btn" id="mailBtn" href="mailto:darkmatterfabdmf@gmail.com">Send by email</a>
             <button class="btn ghost" type="button" id="copy">Copy request</button>
             <button class="btn ghost" type="button" id="edit">Edit request</button>
           </div>
@@ -1159,16 +1159,15 @@ doc.addEventListener('click', function(e){
     var text = 'Custom order request\n\n' + rows.filter(function(r){ return r[1]; }).map(function(r){ return r[0]+': '+r[1]; }).join('\n');
     function done(live){
       $('#summary').textContent = text;
-      $('#sentTitle').textContent = live ? 'Request sent.' : 'Your request is ready.';
+      $('#sentTitle').textContent = live ? 'Request sent' : 'Send your request';
       if(live) $('#sentNote').textContent = 'We got it. Expect a reply with a quote at '+val('email')+'.';
-      else if(ORDER_EMAIL){
+      else {
         var mb = $('#mailBtn');
         mb.href = 'mailto:'+ORDER_EMAIL+'?subject='+encodeURIComponent('Custom order request '+jobId)+'&body='+encodeURIComponent(text);
-        mb.hidden = false;
-        $('#sentTitle').textContent = 'Send your request';
-        $('#sentNote').textContent = 'Press Send by email to open your email app with this request filled in. Or copy it and send it to '+ORDER_EMAIL+'.';
+        $('#sentNote').textContent = 'Your email app should open with this request filled in. Press send there and we will reply with a quote. If it did not open, press Send by email, or copy the request and email it to '+ORDER_EMAIL+'.';
+        try{ window.location.href = mb.href; }catch(e3){}
       }
-      $('#tState').textContent = live ? 'sent' : ORDER_EMAIL ? 'ready to send' : 'preview, not sent';
+      $('#tState').textContent = live ? 'sent' : 'ready to send';
       form.hidden = true; form.style.display = 'none'; sent.hidden = false; sent.focus({preventScroll:true});
       var top = sent.parentNode.getBoundingClientRect().top + (window.scrollY||root.scrollTop) - 96; window.scrollTo(0, Math.max(0, top));
     }
